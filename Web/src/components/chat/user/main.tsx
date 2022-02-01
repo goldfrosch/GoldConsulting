@@ -1,30 +1,57 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
-import chat from "../../../assets/icon/chat.png";
+import Info from "./info";
+import { desc } from "constants/desc";
 
-interface IUserChat {}
-const UserChat: React.FC<IUserChat> = () => {
+import chat from "assets/icon/chat.png";
+import cancel from "assets/icon/x.png";
+
+interface IUserChat {
+  title: string;
+}
+export interface IUserData {
+  email: string;
+  phone: string;
+}
+//React.FC 사용 하지 않는 것을 권장하는 이유
+//요약하자면 매개 변수에 직접 props를 사용하면 구성 요소를보다 정확하게 입력하고
+//오탐을 방지하는 동시에 유연성을 높일 수 있다는 것이다.
+//특정 라이브러리, 프레임웤에서 요구하는 방법이 아니라,
+//Typescript 자체의 타이핑의 관례를 따르는 게 좋다는 것이 상식이기도 하다.
+//동시에 React.FC를 안쓰면 React import를 안해도 되니 더 좋은듯 하다.
+function UserChat({ title }: IUserChat) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [level, setLevel] = useState<number>(0);
+  const [user, setUser] = useState<IUserData>({
+    email: "",
+    phone: ""
+  });
+
+  const toggleOpen = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
     <UserChatBlock>
       <div className="chatting">
-        <div className="icon" onClick={() => setIsOpen(!isOpen)}>
+        <div className="icon" onClick={toggleOpen}>
           <img src={chat} alt="chat-icon" />
         </div>
         <section className={isOpen ? "item" : "item deactive"}>
-          <div className="content">
+          <div className="main">
             <div className="header">
-              <span>어쩔티비</span>
+              <span>{title}</span>
+              <img src={cancel} alt="cancel-icon" onClick={toggleOpen} />
+            </div>
+            <div className="content">
+              <Info desc={desc} user={user} setUser={setUser} />
             </div>
           </div>
         </section>
       </div>
     </UserChatBlock>
   );
-};
+}
 
 const UserChatBlock = styled.div`
   position: fixed;
@@ -80,7 +107,7 @@ const UserChatBlock = styled.div`
       cursor: default;
       transition-property: height;
       transition-duration: 0.25s;
-      & > .content {
+      & > .main {
         height: 100%;
         display: block;
         & > .header {
@@ -98,12 +125,21 @@ const UserChatBlock = styled.div`
           border-radius: 8px 8px 0 0;
 
           padding: 8px;
+          & > img {
+            width: 18px;
+            height: 24px;
+
+            cursor: pointer;
+          }
+        }
+        & > .content {
+          flex: 1;
         }
       }
     }
     & > .deactive {
       height: 0;
-      & > .content {
+      & > .main {
         display: none;
       }
     }

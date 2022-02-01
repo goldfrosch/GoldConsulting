@@ -9,6 +9,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 //Hot reload를 사용하기 위함 
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CleanTerminalPlugin = require('clean-terminal-webpack-plugin');
 
 const ProgressPlugin = require('progress-webpack-plugin');
 
@@ -24,7 +25,10 @@ module.exports = {
     path: path.join(__dirname, "/build")
   },
   resolve: {
-    modules: ["node_modules"],
+    modules: [
+      path.resolve(__dirname, 'node_modules'),
+      path.resolve(__dirname, 'src'),
+    ],
     //import시 파일 확장명 작성 안해도 됨
     extensions: [".js", ".jsx", ".ts", ".tsx"],
     preferRelative: true
@@ -41,6 +45,10 @@ module.exports = {
     }),
     new ReactRefreshWebpackPlugin(),
     new CleanWebpackPlugin(),
+    new CleanTerminalPlugin({
+      message: `Now Compiling...`,
+      onlyInWatchMode: false
+    }),
     new ProgressPlugin(true),
   ],
   module: {
@@ -60,7 +68,7 @@ module.exports = {
         test: /\.(webp|png|svg|jpg|jpeg|gif|ico)$/,
         loader: "file-loader",
         options: {
-          name: "static/medias/images/[name].[ext]?[hash]",
+          name: "static/media/images/[name].[ext]?[hash]",
         }
       },
       {
@@ -69,9 +77,7 @@ module.exports = {
         use: [{
           loader: 'file-loader',
           options: {
-            name: '[name].[ext]',
-            outputPath: 'static/medias/fonts/',
-            publicPath: 'src/font/list/'
+            name: 'static/media/fonts/[name].[ext]',
           }
         }]
       },

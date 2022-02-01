@@ -8,7 +8,7 @@ const App: React.FC<AppProps> = () => {
   return (
     <div>
       <img src={origin} alt="logo" />
-      <UserChat />
+      <UserChat title="하이 ㅋㅋ" />
     </div>
   );
 };
