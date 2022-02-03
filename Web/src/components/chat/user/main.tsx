@@ -7,6 +7,9 @@ import { desc } from "constants/desc";
 import chat from "assets/icon/chat.png";
 import cancel from "assets/icon/x.png";
 
+import CheckUtils from "utils/CheckUtils";
+import Chat from "./chat";
+
 interface IUserChat {
   title: string;
 }
@@ -22,6 +25,7 @@ export interface IUserData {
 //동시에 React.FC를 안쓰면 React import를 안해도 되니 더 좋은듯 하다.
 function UserChat({ title }: IUserChat) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isChat, setIsChat] = useState<boolean>(false);
   const [user, setUser] = useState<IUserData>({
     email: "",
     phone: ""
@@ -29,6 +33,25 @@ function UserChat({ title }: IUserChat) {
 
   const toggleOpen = () => {
     setIsOpen(!isOpen);
+  };
+
+  const backToMain = () => {
+    setUser({
+      email: "",
+      phone: ""
+    });
+    setIsChat(false);
+  };
+  const enterConsultRoom = () => {
+    if (user.email === "" || user.phone === "") {
+      alert("이메일과 전화번호 입력은 필수입니다");
+    } else {
+      if (CheckUtils.VerifyEmail(user.email)) {
+        setIsChat(true);
+      } else {
+        alert("이메일 형식을 제대로 입력해주세요");
+      }
+    }
   };
 
   return (
@@ -39,12 +62,29 @@ function UserChat({ title }: IUserChat) {
         </div>
         <section className={isOpen ? "item" : "item deactive"}>
           <div className="main">
-            <div className="header">
-              <span>{title}</span>
+            <div className={isChat ? "header options" : "header"}>
+              <div>
+                {isChat && (
+                  <span
+                    onClick={backToMain}
+                    style={{ cursor: "pointer" }}
+                  >{`< `}</span>
+                )}
+                <span>{title}</span>
+              </div>
               <img src={cancel} alt="cancel-icon" onClick={toggleOpen} />
             </div>
             <div className="content">
-              <Info desc={desc} user={user} setUser={setUser} />
+              {isChat ? (
+                <Chat />
+              ) : (
+                <Info
+                  desc={desc}
+                  user={user}
+                  setUser={setUser}
+                  check={enterConsultRoom}
+                />
+              )}
             </div>
           </div>
         </section>
@@ -126,11 +166,15 @@ const UserChatBlock = styled.div`
 
           padding: 8px;
           & > img {
-            width: 18px;
-            height: 24px;
+            width: 12px;
+            height: 16px;
 
             cursor: pointer;
           }
+        }
+        & > .options {
+          height: 6.5%;
+          font-size: 16px;
         }
         & > .content {
           flex: 1;
