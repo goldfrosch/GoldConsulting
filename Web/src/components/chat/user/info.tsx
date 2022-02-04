@@ -26,10 +26,9 @@ function Info({ desc, user, setUser, check }: IInfoData) {
         <input
           value={PhoneUtils.GetPhone(user.phone)}
           placeholder="전화번호 입력"
-          onChange={e => {
-            console.log(e.target.value);
-            setUser({ ...user, phone: e.target.value.replace(/[^0-9]/, "") });
-          }}
+          onChange={e =>
+            setUser({ ...user, phone: e.target.value.replace(/[^0-9]/, "") })
+          }
         />
       </div>
       <div className="footer">

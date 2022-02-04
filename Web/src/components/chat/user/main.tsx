@@ -149,7 +149,8 @@ const UserChatBlock = styled.div`
       transition-duration: 0.25s;
       & > .main {
         height: 100%;
-        display: block;
+        display: flex;
+        flex-direction: column;
         & > .header {
           width: 100%;
           height: 7.5%;
