@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 interface ChatItemProps {
@@ -16,6 +16,12 @@ function Chat({}: IChat) {
   ]);
   const chatInputRef = useRef<HTMLTextAreaElement>(null);
 
+  const scrollDownEvent = () => {
+    if (chatInputRef.current) {
+      chatInputRef.current.scrollTop = chatInputRef.current.scrollHeight;
+    }
+  };
+
   const sendChatEvent = () => {
     let newChat: ChatItemProps[] = chatList;
     newChat.push({
@@ -29,13 +35,16 @@ function Chat({}: IChat) {
 
   const handleSendEvent = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      if (e.shiftKey) {
-      } else {
-        e.preventDefault();
+      e.preventDefault();
+      if (chat !== "") {
         sendChatEvent();
       }
     }
   };
+
+  useEffect(() => {
+    scrollDownEvent();
+  }, [chatList]);
 
   return (
     <ChatBlock>
@@ -55,19 +64,21 @@ function Chat({}: IChat) {
           </div>
         ))}
       </div>
-      <form className="chat">
-        <textarea
-          value={chat}
-          maxLength={1024}
-          ref={chatInputRef}
-          placeholder="대화를 입력해주세요"
-          onKeyPress={handleSendEvent}
-          onChange={e => setChat(e.target.value)}
-        />
-        <div>
-          <span style={{ cursor: "pointer" }}>전송</span>
-        </div>
-      </form>
+      <div className="chatRoom">
+        <form className="chatItem">
+          <textarea
+            value={chat}
+            maxLength={1024}
+            ref={chatInputRef}
+            placeholder="대화를 입력해주세요"
+            onKeyPress={handleSendEvent}
+            onChange={e => setChat(e.target.value)}
+          />
+          <div>
+            <span style={{ cursor: "pointer" }}>전송</span>
+          </div>
+        </form>
+      </div>
     </ChatBlock>
   );
 }
@@ -76,20 +87,37 @@ const ChatBlock = styled.div`
 
   display: flex;
   flex-direction: column;
-
-  padding: 8px;
+  justify-content: space-between;
 
   & > .content {
-    flex: 1;
+    height: 460px;
+    padding: 8px;
+    overflow-y: auto;
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+      background: #ffffff;
+    }
+    ::-webkit-scrollbar-thumb {
+      border-radius: 4px;
+      background-color: #ced4da;
+      &:hover {
+        background-color: #adb5bd;
+      }
+    }
+
     & > .chatList {
       display: flex;
       align-items: center;
       & > .msg {
+        max-width: 60%;
         border-radius: 8px;
         font-size: 14px;
 
         padding: 8px;
         margin: 4px;
+
+        /* word-wrap: normal; */
       }
       & > .client {
         background-color: honeydew;
@@ -103,24 +131,33 @@ const ChatBlock = styled.div`
     }
     & > .customer {
       justify-content: flex-end;
-      text-align: right;
     }
   }
-  & > .chat {
-    width: 100%;
-    padding: 12px 8px;
-    background-color: #f3f3f3;
-    border-radius: 16px;
+  & > .chatRoom {
+    flex: 1;
+    padding: 0 8px;
 
     display: flex;
-    justify-content: space-between;
-    & > textarea {
-      flex: 1;
-      height: 20px;
+    align-items: center;
+    justify-content: center;
 
-      border: none;
-      background: none;
-      resize: none;
+    & > .chatItem {
+      width: 100%;
+      padding: 12px 8px;
+      background-color: #f3f3f3;
+      border-radius: 16px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      & > textarea {
+        flex: 1;
+        height: 20px;
+
+        border: none;
+        background: none;
+        resize: none;
+      }
     }
   }
 `;
