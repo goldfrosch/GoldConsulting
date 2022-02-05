@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 
 interface ChatItemProps {
@@ -14,23 +15,27 @@ function Chat({}: IChat) {
     { user: "client", message: "하이요", time: new Date() },
     { user: "client", message: "하이요", time: new Date() }
   ]);
-  const chatInputRef = useRef<HTMLTextAreaElement>(null);
+  const chatListRef = useRef<HTMLDivElement>(null);
 
   const scrollDownEvent = () => {
-    if (chatInputRef.current) {
-      chatInputRef.current.scrollTop = chatInputRef.current.scrollHeight;
+    if (chatListRef.current) {
+      chatListRef.current.scrollTop = chatListRef.current.scrollHeight * 2;
     }
   };
 
-  const sendChatEvent = () => {
+  const sendChatEvent = async () => {
     let newChat: ChatItemProps[] = chatList;
     newChat.push({
       user: "customer",
       message: chat,
       time: new Date()
     });
-    setChatList(newChat);
+    //비동기로 처리되느라고 이놈이 처리되기 이전에 맨 밑으로 스크롤이 움직이는 이벤트가
+    //발생하기 때문에 동기로 처리되게 변경해둠.
+    //퉤...
+    await setChatList(newChat);
     setChat("");
+    scrollDownEvent();
   };
 
   const handleSendEvent = (e: React.KeyboardEvent) => {
@@ -42,22 +47,18 @@ function Chat({}: IChat) {
     }
   };
 
-  useEffect(() => {
-    scrollDownEvent();
-  }, [chatList]);
-
   return (
     <ChatBlock>
-      <div className="content">
+      <div className="content" ref={chatListRef}>
         {chatList.map((data, key) => (
           <div
             className={
               data.user === "client" ? "chatList client" : "chatList customer"
             }
+            key={key}
           >
             <div
               className={data.user === "client" ? "msg client" : "msg customer"}
-              key={key}
             >
               {data.message}
             </div>
@@ -69,7 +70,6 @@ function Chat({}: IChat) {
           <textarea
             value={chat}
             maxLength={1024}
-            ref={chatInputRef}
             placeholder="대화를 입력해주세요"
             onKeyPress={handleSendEvent}
             onChange={e => setChat(e.target.value)}
@@ -90,9 +90,11 @@ const ChatBlock = styled.div`
   justify-content: space-between;
 
   & > .content {
-    height: 460px;
-    padding: 8px;
-    overflow-y: auto;
+    height: 465px;
+    padding: 0 8px;
+    overflow-y: scroll;
+
+    border: 1px solid black;
     ::-webkit-scrollbar {
       width: 10px;
       height: 10px;
@@ -116,8 +118,6 @@ const ChatBlock = styled.div`
 
         padding: 8px;
         margin: 4px;
-
-        /* word-wrap: normal; */
       }
       & > .client {
         background-color: honeydew;
@@ -134,8 +134,7 @@ const ChatBlock = styled.div`
     }
   }
   & > .chatRoom {
-    flex: 1;
-    padding: 0 8px;
+    padding: 8px;
 
     display: flex;
     align-items: center;
