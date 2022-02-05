@@ -94,7 +94,6 @@ const ChatBlock = styled.div`
     padding: 0 8px;
     overflow-y: scroll;
 
-    border: 1px solid black;
     ::-webkit-scrollbar {
       width: 10px;
       height: 10px;
