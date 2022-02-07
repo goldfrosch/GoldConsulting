@@ -1,4 +1,4 @@
-import React from "react";
+import { ButtonHTMLAttributes } from "react";
 import styled from "styled-components";
 
 import {
@@ -7,19 +7,18 @@ import {
   ButtonThemeSize
 } from "styles/Palette";
 
-interface ButtonProps {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   theme: ButtonThemeColor;
   size: ButtonThemeSize;
-  onClick?: () => void;
 }
 
-const Button: React.FC<ButtonProps> = ({ theme, size, onClick, children }) => {
+function Button({ theme, size, children, ...props }: ButtonProps) {
   return (
-    <ButtonBlock theme={theme} size={size} onClick={onClick}>
+    <ButtonBlock theme={theme} size={size} {...props}>
       {children}
     </ButtonBlock>
   );
-};
+}
 
 const ButtonBlock = styled.button<ButtonProps>`
   background-color: ${props =>

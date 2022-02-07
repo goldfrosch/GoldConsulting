@@ -1,17 +1,12 @@
-import React, { useRef, useState } from "react";
-import { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
-interface ChatItemProps {
-  user: "client" | "customer";
-  message: string;
-  time: Date;
-}
+import { IChat } from "constants/chatUserSampleList";
 
-interface IChat {}
-function Chat({}: IChat) {
+interface ChatProps {}
+function Chat({}: ChatProps) {
   const [chat, setChat] = useState<string>("");
-  const [chatList, setChatList] = useState<ChatItemProps[]>([
+  const [chatList, setChatList] = useState<IChat[]>([
     { user: "client", message: "하이요", time: new Date() },
     { user: "client", message: "하이요", time: new Date() }
   ]);
@@ -24,18 +19,15 @@ function Chat({}: IChat) {
   };
 
   const sendChatEvent = async () => {
-    let newChat: ChatItemProps[] = chatList;
-    newChat.push({
-      user: "customer",
-      message: chat,
-      time: new Date()
-    });
-    //비동기로 처리되느라고 이놈이 처리되기 이전에 맨 밑으로 스크롤이 움직이는 이벤트가
-    //발생하기 때문에 동기로 처리되게 변경해둠.
-    //퉤...
-    await setChatList(newChat);
+    setChatList(prev => [
+      ...prev,
+      {
+        user: "customer",
+        message: chat,
+        time: new Date()
+      }
+    ]);
     setChat("");
-    scrollDownEvent();
   };
 
   const handleSendEvent = (e: React.KeyboardEvent) => {
@@ -46,6 +38,28 @@ function Chat({}: IChat) {
       }
     }
   };
+
+  //소켓
+  let webSocket = new WebSocket("ws://localhost:8080/chat/user");
+
+  webSocket.onopen = function (message) {
+    console.log(message);
+  };
+
+  webSocket.onmessage = function (message) {
+    setChatList(prev => [
+      ...prev,
+      {
+        user: "client",
+        message: String(message),
+        time: new Date()
+      }
+    ]);
+  };
+
+  useEffect(() => {
+    scrollDownEvent();
+  }, [chatList]);
 
   return (
     <ChatBlock>
@@ -91,21 +105,8 @@ const ChatBlock = styled.div`
 
   & > .content {
     height: 465px;
-    padding: 0 8px;
+    padding: 8px;
     overflow-y: scroll;
-
-    ::-webkit-scrollbar {
-      width: 10px;
-      height: 10px;
-      background: #ffffff;
-    }
-    ::-webkit-scrollbar-thumb {
-      border-radius: 4px;
-      background-color: #ced4da;
-      &:hover {
-        background-color: #adb5bd;
-      }
-    }
 
     & > .chatList {
       display: flex;

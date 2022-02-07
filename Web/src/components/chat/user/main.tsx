@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import styled from "styled-components";
 
 import Info from "./info";
@@ -42,7 +42,8 @@ function UserChat({ title }: IUserChat) {
     });
     setIsChat(false);
   };
-  const enterConsultRoom = () => {
+  const enterConsultRoom = (e: FormEvent) => {
+    e.preventDefault();
     if (user.email === "" || user.phone === "") {
       alert("이메일과 전화번호 입력은 필수입니다");
     } else {

@@ -6,19 +6,6 @@ const GlobalStyle = createGlobalStyle`
     body {
         box-sizing: border-box;
         background-color: white;
-
-        ::-webkit-scrollbar {
-            width: 10px;
-            height: 10px;
-            background: #ffffff;
-        }
-        ::-webkit-scrollbar-thumb {
-            border-radius: 4px;
-            background-color: #ced4da;
-            &:hover {
-                background-color: #adb5bd;
-            }
-        }
     }
     button {
         border: 0;
@@ -34,6 +21,19 @@ const GlobalStyle = createGlobalStyle`
         list-style: none;
         color: inherit;
         font-size: inherit;
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+            background: #ffffff;
+        }
+        ::-webkit-scrollbar-thumb {
+            border-radius: 4px;
+            background-color: #ced4da;
+            &:hover {
+                background-color: #adb5bd;
+            }
+        }
     }
 `;
 

@@ -1,1 +1,1 @@
-export const desc = "아아...이건...'설명'이란...것이다...";
+export const desc = "붸에에에에에에에에레렉ㄱ엥렝렉";
