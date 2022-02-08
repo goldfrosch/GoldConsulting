@@ -1,7 +1,7 @@
 import React from "react";
 
 import UserChat from "components/chat/user/main";
-import AdminChat from "components/chat/admin/miain";
+import AdminChat from "components/chat/admin/main";
 import IChatUserList from "constants/chatAdminUserList";
 
 interface AppProps {}

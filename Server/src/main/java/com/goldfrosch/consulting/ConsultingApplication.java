@@ -7,12 +7,13 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 @SpringBootApplication
 public class ConsultingApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(ConsultingApplication.class, args);
-    }
-
     @Bean
     public ServerEndpointExporter serverEndpointExporter() {
         return new ServerEndpointExporter();
     }
+
+    public static void main(String[] args) {
+        SpringApplication.run(ConsultingApplication.class, args);
+    }
+
 }

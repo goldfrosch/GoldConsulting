@@ -1,5 +1,6 @@
 package com.goldfrosch.consulting.domain.chat.socket;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -9,6 +10,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+@Slf4j
 @Component
 @ServerEndpoint("/admin/chat")
 public class AdminSocket {
@@ -56,6 +58,7 @@ public class AdminSocket {
     }
     public static void sendMessage(String key, String message) {
         send("{\"status\":\"message\", \"key\":\"" + key + "\", \"message\":\"" + message + "\"}");
+        log.info(key);
     }
     public static void bye(String key) {
         send("{\"status\":\"bye\", \"key\":\"" + key + "\"}");

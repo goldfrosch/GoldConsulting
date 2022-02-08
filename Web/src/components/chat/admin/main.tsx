@@ -36,6 +36,9 @@ const AdminChatBlock = styled.div`
     padding: 8px;
     font-size: 20px;
     font-weight: 700;
+
+    display: flex;
+    align-items: center;
   }
   & > .content {
     width: 100%;

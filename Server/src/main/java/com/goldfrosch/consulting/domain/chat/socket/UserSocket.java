@@ -1,5 +1,6 @@
 package com.goldfrosch.consulting.domain.chat.socket;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.OnClose;
@@ -10,6 +11,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.*;
 
+@Slf4j
 @Component
 @ServerEndpoint("/user/chat")
 public class UserSocket {
@@ -43,7 +45,7 @@ public class UserSocket {
     public void handleOpen(Session userSession) {
         User user = new User();
         //접속한 유저의 랜덤 UUID 키 생성
-        user.key = UUID.randomUUID().toString().replace("-","");
+        user.key = userSession.getQueryString();
         user.session = userSession;
 
         //sessionUser 리스트에 값 추가하기
@@ -51,7 +53,7 @@ public class UserSocket {
     }
 
     @OnMessage
-    public void handleMessage(String message, Session userSession) throws IOException {
+    public void handleMessage(String message, Session userSession) {
         User user = getUser(userSession);
         if(user != null) {
             AdminSocket.sendMessage(user.key, message);

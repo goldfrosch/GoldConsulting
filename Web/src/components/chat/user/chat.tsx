@@ -2,9 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { IChat } from "constants/chatUserSampleList";
+import { IUserData } from "./main";
 
-interface ChatProps {}
-function Chat({}: ChatProps) {
+interface ChatProps {
+  userData: IUserData;
+}
+function Chat({ userData }: ChatProps) {
   const [chat, setChat] = useState<string>("");
   const [chatList, setChatList] = useState<IChat[]>([
     { user: "client", message: "하이요", time: new Date() },
@@ -27,6 +30,7 @@ function Chat({}: ChatProps) {
         time: new Date()
       }
     ]);
+    webSocket.send(chat);
     setChat("");
   };
 
@@ -40,18 +44,21 @@ function Chat({}: ChatProps) {
   };
 
   //소켓
-  let webSocket = new WebSocket("ws://localhost:8080/chat/user");
+  let webSocket = new WebSocket(
+    `ws://localhost:8080/user/chat?${userData.email}`
+  );
 
   webSocket.onopen = function (message) {
-    console.log(message);
+    console.log("오픈완료");
   };
 
   webSocket.onmessage = function (message) {
+    console.log(message);
     setChatList(prev => [
       ...prev,
       {
         user: "client",
-        message: String(message),
+        message: String(message.data),
         time: new Date()
       }
     ]);

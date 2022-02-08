@@ -77,7 +77,7 @@ function UserChat({ title }: IUserChat) {
             </div>
             <div className="content">
               {isChat ? (
-                <Chat />
+                <Chat userData={user} />
               ) : (
                 <Info
                   desc={desc}
