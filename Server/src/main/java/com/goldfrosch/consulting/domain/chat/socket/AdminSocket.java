@@ -9,6 +9,7 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
+import org.json.JSONObject;
 
 @Slf4j
 @Component
@@ -32,9 +33,10 @@ public class AdminSocket {
 
     @OnMessage
     public void handleMessage(String message, Session userSession) throws IOException {
-        String[] split = message.split("#####", 2);
-        String key = split[0];
-        String msg = split[1];
+        JSONObject adminMessage = new JSONObject(message);
+        String key = adminMessage.getString("key");
+        String msg = adminMessage.getString("message");
+
         UserSocket.sendMessage(key, msg);
     }
 

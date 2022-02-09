@@ -48,10 +48,6 @@ function Chat({ userData }: ChatProps) {
     `ws://localhost:8080/user/chat?${userData.email}`
   );
 
-  webSocket.onopen = function (message) {
-    console.log("오픈완료");
-  };
-
   webSocket.onmessage = function (message) {
     console.log(message);
     setChatList(prev => [

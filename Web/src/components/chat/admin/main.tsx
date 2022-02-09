@@ -1,21 +1,18 @@
 import styled from "styled-components";
 
 import AdminUserList from "./userList";
-import { IChatUser } from "constants/chatAdminUserList";
 
 import "font/font.css";
 
-interface AdminChatProps {
-  userList: IChatUser[];
-}
+interface AdminChatProps {}
 
-function AdminChat({ userList }: AdminChatProps) {
+function AdminChat() {
   return (
     <AdminChatBlock>
       <div className="header">asdf</div>
       <div className="content">
         <div className="list">
-          <AdminUserList userList={userList} />
+          <AdminUserList />
         </div>
         <div className="chat">asd</div>
       </div>

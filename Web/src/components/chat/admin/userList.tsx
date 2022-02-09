@@ -1,14 +1,22 @@
-import { IChatUser } from "constants/chatAdminUserList";
+import { UserArray } from "constants/chatAdminUserList";
 import styled from "styled-components";
 import DateUtils from "utils/DateUtils";
 
 interface IUserListProps {
-  userList: IChatUser[];
+  userList?: UserArray;
 }
+
 function AdminUserList({ userList }: IUserListProps) {
+  let webSocket = new WebSocket(`ws://localhost:8080/admin/chat`);
+
+  webSocket.onmessage = function (message) {
+    let data: UserArray = {};
+    data[message.data] = [];
+  };
+
   return (
     <AdminUserListBlock>
-      {userList.map((data, key) => (
+      {/* {userList.map((data, key) => (
         <div className="userRoom" key={key}>
           <div className="user">
             <div className="profile">{data.nick}</div>
@@ -16,7 +24,7 @@ function AdminUserList({ userList }: IUserListProps) {
           </div>
           <span className="time">{DateUtils.getTime(data.time)}</span>
         </div>
-      ))}
+      ))} */}
     </AdminUserListBlock>
   );
 }
