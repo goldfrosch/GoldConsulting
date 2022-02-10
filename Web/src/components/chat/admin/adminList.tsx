@@ -59,7 +59,14 @@ function AdminUserList() {
       {userList.map((data, key) => (
         <div className="userRoom" key={key}>
           <div className="user">
-            <div className="profile">{data.key}</div>
+            <div className="profile">
+              <span>{data.key}</span>
+              {data.newMsg && (
+                <div className="num">
+                  {data.newMsg > 9 ? "9+" : data.newMsg}
+                </div>
+              )}
+            </div>
             <div className="msg">{data.message}</div>
           </div>
           <span className="time">{DateUtils.getTime(data.time)}</span>
@@ -83,7 +90,27 @@ const AdminUserListBlock = styled.div`
     & > .user {
       width: 60%;
       & > .profile {
-        font-family: "A16";
+        display: flex;
+        align-items: center;
+        & > span {
+          font-family: "A16";
+        }
+        & > .num {
+          width: 16px;
+          height: 16px;
+
+          background-color: #e93232;
+          color: white;
+
+          font-size: 10px;
+          border-radius: 50%;
+          margin: 0 4px;
+          padding: 4px;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
       }
       & > .msg {
         color: #8c8c8c;
