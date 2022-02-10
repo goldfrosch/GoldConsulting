@@ -1,36 +1,41 @@
 import { useRef, useState } from "react";
-import { IMessageData, IUserArray, IUserData } from "types/AdminChat";
+import { IMessageData, IUserInfo } from "types/AdminChat";
 
 import styled from "styled-components";
-
-interface IUserListProps {
-  userList?: IUserArray;
-}
+import DateUtils from "utils/DateUtils";
 
 const webSocketURL = `ws://localhost:8080/chat/admin`;
-function AdminUserList({ userList }: IUserListProps) {
+function AdminUserList() {
   //소켓이 켜져있을 경우에는 기존 let선언 데이터가 그대로 유지되더라...!
   const webSocket = useRef<WebSocket | null>(null);
-  const userLists: IUserArray = {};
+  //let으로 할까했는데 어차피 불변성에도 속하지 않으니까 const로 했는데...
+  //나중에 더 좋은게 뭔지 알아보도록 할 것
+  const [userList, setUserList] = useState<IUserInfo[]>([]);
 
   const receiveMessage = (message: MessageEvent) => {
     let newData: IMessageData = JSON.parse(message.data);
+    let newList: IUserInfo[] = userList;
+    let findNum = newList.findIndex(data => data.key === newData.key);
 
-    if (userLists[newData.key]) {
-      userLists[newData.key] = {
-        newMsg: userLists[newData.key].newMsg + 1,
+    if (findNum === -1) {
+      newList.unshift({
+        key: newData.key,
+        time: newData.time,
         message: newData.message,
-        time: newData.time
-      };
+        newMsg: 1
+      });
     } else {
-      userLists[newData.key] = {
-        newMsg: 1,
+      let prevData = newList[findNum];
+      newList.splice(findNum, 1);
+      newList.unshift({
+        ...prevData,
         message: newData.message,
-        time: newData.time
-      };
+        time: newData.time,
+        newMsg: prevData.newMsg + 1
+      });
     }
 
-    console.log(userLists);
+    setUserList([...newList]);
   };
 
   if (!webSocket.current) {
@@ -51,15 +56,15 @@ function AdminUserList({ userList }: IUserListProps) {
 
   return (
     <AdminUserListBlock>
-      {/* {userList.map((data, key) => (
+      {userList.map((data, key) => (
         <div className="userRoom" key={key}>
           <div className="user">
-            <div className="profile">{data.nick}</div>
-            <div className="msg">{data.msg}</div>
+            <div className="profile">{data.key}</div>
+            <div className="msg">{data.message}</div>
           </div>
           <span className="time">{DateUtils.getTime(data.time)}</span>
         </div>
-      ))} */}
+      ))}
     </AdminUserListBlock>
   );
 }

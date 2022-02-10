@@ -5,12 +5,12 @@ export type IUserArray = {
 
 export interface IMessageData extends IUserData {
   status: "MESSAGE" | "LEAVE"
-  key: string,
 }
 
 export interface IUserData {
   message: string,
   time: Date,
+  key: string,
 }
 
 export interface IUserInfo extends IUserData {
