@@ -8,12 +8,40 @@ interface ChatProps {
   userData: IUserData;
 }
 function Chat({ userData }: ChatProps) {
+  const socketURL = `ws://localhost:8080/chat/user?${userData.email}`;
+
   const [chat, setChat] = useState<string>("");
   const [chatList, setChatList] = useState<IChat[]>([
     { user: "client", message: "하이요", time: new Date() },
     { user: "client", message: "하이요", time: new Date() }
   ]);
   const chatListRef = useRef<HTMLDivElement>(null);
+  const webSocket = useRef<WebSocket | null>(null);
+
+  if (!webSocket.current) {
+    webSocket.current = new WebSocket(socketURL);
+
+    const { current } = webSocket;
+    current.onopen = function (message) {
+      console.log(message);
+    };
+
+    current.onmessage = function (message) {
+      console.log(message);
+      setChatList(prev => [
+        ...prev,
+        {
+          user: "client",
+          message: String(message.data),
+          time: new Date()
+        }
+      ]);
+    };
+
+    current.onclose = function () {
+      console.log("채팅 종료");
+    };
+  }
 
   const scrollDownEvent = () => {
     if (chatListRef.current) {
@@ -30,7 +58,9 @@ function Chat({ userData }: ChatProps) {
         time: new Date()
       }
     ]);
-    webSocket.send(chat);
+    if (webSocket.current) {
+      webSocket.current.send(chat);
+    }
     setChat("");
   };
 
@@ -41,23 +71,6 @@ function Chat({ userData }: ChatProps) {
         sendChatEvent();
       }
     }
-  };
-
-  //소켓
-  let webSocket = new WebSocket(
-    `ws://localhost:8080/user/chat?${userData.email}`
-  );
-
-  webSocket.onmessage = function (message) {
-    console.log(message);
-    setChatList(prev => [
-      ...prev,
-      {
-        user: "client",
-        message: String(message.data),
-        time: new Date()
-      }
-    ]);
   };
 
   useEffect(() => {

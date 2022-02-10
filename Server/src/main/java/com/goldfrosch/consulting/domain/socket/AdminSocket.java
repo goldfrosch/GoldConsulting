@@ -1,9 +1,10 @@
-package com.goldfrosch.consulting.domain.chat.socket;
+package com.goldfrosch.consulting.domain.socket;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
@@ -13,7 +14,7 @@ import org.json.JSONObject;
 
 @Slf4j
 @Component
-@ServerEndpoint("/admin/chat")
+@ServerEndpoint("/chat/admin")
 public class AdminSocket {
     private static Session admin = null;
     @OnOpen
@@ -59,10 +60,12 @@ public class AdminSocket {
         send("{\"status\":\"visit\", \"key\":\"" + key + "\"}");
     }
     public static void sendMessage(String key, String message) {
-        send("{\"status\":\"message\", \"key\":\"" + key + "\", \"message\":\"" + message + "\"}");
-        log.info(key);
+        String msg = "{\"status\":\"MESSAGE\", \"key\":\"" + key + "\",\"time\":\"" + LocalDateTime.now() +  "\",\"message\":\"" + message + "\"}";
+        send(msg);
+        log.info(msg);
     }
+
     public static void bye(String key) {
-        send("{\"status\":\"bye\", \"key\":\"" + key + "\"}");
+        send("{\"status\":\"LEAVE\", \"key\":\"" + key + "\"}");
     }
 }

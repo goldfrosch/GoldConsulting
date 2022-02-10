@@ -1,14 +1,14 @@
 import { FormEvent, useState } from "react";
 import styled from "styled-components";
 
-import Info from "./info";
+import Info from "./userInfo";
 import { desc } from "constants/desc";
 
 import chat from "assets/icon/chat.png";
 import cancel from "assets/icon/x.png";
 
 import CheckUtils from "utils/CheckUtils";
-import Chat from "./chat";
+import Chat from "./userChat";
 
 interface IUserChat {
   title: string;
@@ -47,11 +47,7 @@ function UserChat({ title }: IUserChat) {
     if (user.email === "" || user.phone === "") {
       alert("이메일과 전화번호 입력은 필수입니다");
     } else {
-      if (CheckUtils.VerifyEmail(user.email)) {
-        setIsChat(true);
-      } else {
-        alert("이메일 형식을 제대로 입력해주세요");
-      }
+      setIsChat(true);
     }
   };
 

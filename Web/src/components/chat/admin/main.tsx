@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import AdminUserList from "./userList";
+import AdminUserList from "./adminList";
 
 import "font/font.css";
 
@@ -14,7 +14,7 @@ function AdminChat() {
         <div className="list">
           <AdminUserList />
         </div>
-        <div className="chat">asd</div>
+        <div className="chat">123</div>
       </div>
     </AdminChatBlock>
   );

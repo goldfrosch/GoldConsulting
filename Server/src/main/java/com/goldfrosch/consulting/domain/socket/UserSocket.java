@@ -1,4 +1,4 @@
-package com.goldfrosch.consulting.domain.chat.socket;
+package com.goldfrosch.consulting.domain.socket;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ import java.util.*;
 
 @Slf4j
 @Component
-@ServerEndpoint("/user/chat")
+@ServerEndpoint("/chat/user")
 public class UserSocket {
     private class User {
         Session session;
