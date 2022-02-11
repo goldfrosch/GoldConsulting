@@ -43,6 +43,7 @@ public class AdminSocket {
 
     @OnClose
     public void handleClose(Session userSession) {
+        log.info("테스트 종료");
         admin = null;
     }
 
