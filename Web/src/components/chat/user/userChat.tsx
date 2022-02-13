@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import { IChat } from "constants/chatUserSampleList";
 import { IUserData } from "./main";
+import ChatItem from "components/common/chat/items";
 
 interface ChatProps {
   userData: IUserData;
@@ -81,18 +82,12 @@ function Chat({ userData }: ChatProps) {
     <ChatBlock>
       <div className="content" ref={chatListRef}>
         {chatList.map((data, key) => (
-          <div
-            className={
-              data.user === "client" ? "chatList client" : "chatList customer"
-            }
+          <ChatItem
+            owner={data.user}
+            msg={data.message}
+            user="user"
             key={key}
-          >
-            <div
-              className={data.user === "client" ? "msg client" : "msg customer"}
-            >
-              {data.message}
-            </div>
-          </div>
+          />
         ))}
       </div>
       <div className="chatRoom">

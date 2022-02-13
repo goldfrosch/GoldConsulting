@@ -26,40 +26,22 @@ function AdminChat() {
     chats: []
   });
 
-  const [userList, setUserList] = useState<IUserInfo[]>([]);
-  const [userChatList, setUserChatList] = useState<IChat[]>([]);
-  const [userKey, setUserKey] = useState<string>("");
-
   const viewUserChatList = (key: string) => {
-    let datas: IUserInfo[] = userList;
-    let findNum = datas.findIndex(data => data.key === key);
+    let lists: IUserInfo[] = adminData.list;
+    let findNum = lists.findIndex(data => data.key === key);
 
-    datas[findNum].newMsg = 0;
+    lists[findNum].newMsg = 0;
 
     setAdminData({
       userKey: key,
-      list: [...datas],
+      list: [...lists],
       chats: []
     });
   };
 
-  const getChatWithUser = (data: IMessageData) => {
-    if (data.key === userKey) {
-      setUserChatList(prev => [
-        ...prev,
-        {
-          user: "customer",
-          message: data.message,
-          time: new Date()
-        }
-      ]);
-      console.log(userChatList);
-    }
-  };
-
   const receiveMessage = (message: MessageEvent) => {
     let newData: IMessageData = JSON.parse(message.data);
-    let newList: IUserInfo[] = userList;
+    let newList: IUserInfo[] = adminData.list;
     let findNum = newList.findIndex(data => data.key === newData.key);
 
     if (findNum === -1) {
@@ -80,13 +62,25 @@ function AdminChat() {
       });
     }
 
-    setAdminData(prev => {
-      return {
-        ...prev,
-        list: newList
-      };
-    });
-    getChatWithUser(newData);
+    setAdminData(prev =>
+      newData.key === prev.userKey
+        ? {
+            ...prev,
+            list: newList,
+            chats: [
+              ...prev.chats,
+              {
+                user: "customer",
+                message: newData.message,
+                time: newData.time
+              }
+            ]
+          }
+        : {
+            ...prev,
+            list: newList
+          }
+    );
   };
 
   if (!webSocket.current) {
@@ -111,12 +105,17 @@ function AdminChat() {
       <div className="content">
         <div className="list">
           <AdminUserList
-            userList={userList}
+            userList={adminData.list}
             viewUserChatList={viewUserChatList}
           />
         </div>
         <div className="chat">
-          {userKey !== "" && <AdminChatModule userKey={adminData.userKey} />}
+          {adminData.userKey !== "" && (
+            <AdminChatModule
+              userKey={adminData.userKey}
+              chats={adminData.chats}
+            />
+          )}
         </div>
       </div>
     </AdminChatBlock>
