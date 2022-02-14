@@ -32,7 +32,7 @@ const ChatItemBlock = styled.div<ChatOwnerType>`
   & > .msg {
     max-width: 60%;
     border-radius: 8px;
-    font-size: 14px;
+    font-size: ${props => (props.user === "admin" ? "16px" : "14px")};
 
     padding: 8px;
     margin: 4px;

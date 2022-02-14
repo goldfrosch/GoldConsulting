@@ -36,8 +36,9 @@ function AdminUserList({ userList, viewUserChatList }: AdminUserListProps) {
 
 const AdminUserListBlock = styled.div`
   & > .userRoom {
-    padding: 12px;
     border-bottom: 1px solid #a9a9a9;
+
+    padding: 8px;
 
     display: flex;
     align-items: center;
@@ -47,6 +48,8 @@ const AdminUserListBlock = styled.div`
 
     & > .user {
       width: 60%;
+      height: calc(6vh - 4px);
+
       & > .profile {
         display: flex;
         align-items: center;

@@ -7,7 +7,7 @@ interface AppProps {}
 const App: React.FC<AppProps> = () => {
   return (
     <div>
-      <div style={{ width: "80%", height: "80vh" }}>
+      <div style={{ width: "100vw", height: "100vh" }}>
         <AdminChat />
       </div>
       <UserChat title="하이 ㅋㅋ" />

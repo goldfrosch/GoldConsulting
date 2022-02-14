@@ -28,7 +28,6 @@ function Chat({ userData }: ChatProps) {
     };
 
     current.onmessage = function (message) {
-      console.log(message);
       setChatList(prev => [
         ...prev,
         {

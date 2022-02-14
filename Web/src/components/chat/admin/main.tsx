@@ -27,15 +27,15 @@ function AdminChat() {
   });
 
   const viewUserChatList = (key: string) => {
-    let lists: IUserInfo[] = adminData.list;
-    let findNum = lists.findIndex(data => data.key === key);
+    let datas: IAdminData = adminData;
+    let findNum = datas.list.findIndex(data => data.key === key);
 
-    lists[findNum].newMsg = 0;
-
+    datas.list[findNum].newMsg = 0;
+    datas.chats = datas.userKey === key ? [...datas.chats] : [];
     setAdminData({
       userKey: key,
-      list: [...lists],
-      chats: []
+      list: [...datas.list],
+      chats: [...datas.chats]
     });
   };
 
@@ -111,10 +111,7 @@ function AdminChat() {
         </div>
         <div className="chat">
           {adminData.userKey !== "" && (
-            <AdminChatModule
-              userKey={adminData.userKey}
-              chats={adminData.chats}
-            />
+            <AdminChatModule chats={adminData.chats} />
           )}
         </div>
       </div>
@@ -128,7 +125,7 @@ const AdminChatBlock = styled.div`
 
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   & > .header {
-    height: 8%;
+    height: 10vh;
     background-color: #1ad02f;
     color: white;
 
@@ -141,47 +138,18 @@ const AdminChatBlock = styled.div`
   }
   & > .content {
     width: 100%;
-    height: 92%;
+    height: 90vh;
 
     display: flex;
     & > .list {
       width: 30%;
       height: 100%;
-      overflow-y: scroll;
-      & > .userRoom {
-        padding: 12px;
-        border-bottom: 1px solid #a9a9a9;
-
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        cursor: pointer;
-
-        & > .user {
-          width: 60%;
-          & > .profile {
-            font-family: "A16";
-          }
-          & > .msg {
-            color: #8c8c8c;
-            font-family: "A12";
-            padding: 4px;
-            padding-left: 16px;
-
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-          }
-        }
-        & > .time {
-          font-size: 14px;
-          color: #898989;
-        }
-      }
+      overflow-y: auto;
+      border-right: 1px solid #a9a9a9;
     }
     & > .chat {
-      flex: 1;
+      width: 40%;
+      height: 100%;
     }
   }
 `;
